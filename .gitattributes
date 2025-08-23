@@ -1,0 +1,6 @@
+# Ignore auto-generated native code from language stats
+ios/* linguist-vendored
+android/* linguist-vendored
+macos/* linguist-vendored
+windows/* linguist-vendored
+linux/* linguist-vendored
