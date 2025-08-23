@@ -26,11 +26,17 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       image: 'assets/images/onboarding2.png',
     ),
     OnboardingPage(
-      title: 'Fresh & Quality Food',
-      subtitle: 'Enjoy fresh, high-quality ingredients in every meal',
+      title: 'We’re the besties of birthday peoples',
+      subtitle: 'We send cakes to our plus members, (only one cake per person)',
       image: 'assets/images/onboarding3.png',
     ),
   ];
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -41,39 +47,32 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           Container(color: AppColors.background),
           // Only the image and text swipe
           SafeArea(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Expanded(
-                  flex: 3,
-                  child: PageView.builder(
-                    controller: _pageController,
-                    onPageChanged: (index) {
-                      setState(() {
-                        _currentPage = index;
-                      });
-                    },
-                    itemCount: _pages.length,
-                    itemBuilder: (context, index) {
-                      return Container(
+            child: PageView.builder(
+              controller: _pageController,
+              onPageChanged: (index) {
+                print('Page changed to: $index');
+                setState(() {
+                  _currentPage = index;
+                });
+              },
+              itemCount: _pages.length,
+              itemBuilder: (context, index) {
+                return Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Expanded(
+                      flex: 3,
+                      child: Container(
                         padding: const EdgeInsets.all(0),
                         child: Image.asset(
                           _pages[index].image,
                           fit: BoxFit.contain,
                         ),
-                      );
-                    },
-                  ),
-                ),
-                Expanded(
-                  flex: 2,
-                  child: PageView.builder(
-                    controller: _pageController,
-                    physics: const NeverScrollableScrollPhysics(),
-                    // lock text to image page
-                    itemCount: _pages.length,
-                    itemBuilder: (context, index) {
-                      return Container(
+                      ),
+                    ),
+                    Expanded(
+                      flex: 2,
+                      child: Container(
                         padding: const EdgeInsets.symmetric(horizontal: 32),
                         child: Column(
                           children: [
@@ -98,11 +97,11 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                             ),
                           ],
                         ),
-                      );
-                    },
-                  ),
-                ),
-              ],
+                      ),
+                    ),
+                  ],
+                );
+              },
             ),
           ),
           // Bottom controls
@@ -143,36 +142,40 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                               context.go('/login');
                             },
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.transparent,
+                              backgroundColor: const Color(0xFFE8F5E8),
+                              elevation: 0,
                               padding: const EdgeInsets.symmetric(vertical: 16),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(12),
-                                side: const BorderSide(
-                                  color: Colors.white,
-                                  width: 2,
-                                ),
                               ),
                             ),
                             child: const Text(
                               'Skip',
                               style: TextStyle(
-                                color: Colors.white,
+                                color: Color(0xFF5CAB1A),
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
                           ),
                         ),
+                        const SizedBox(width: 16),
                         Expanded(
                           child: ElevatedButton(
                             onPressed: () {
-                              _pageController.nextPage(
-                                duration: const Duration(milliseconds: 300),
-                                curve: Curves.easeInOut,
+                              print(
+                                'Next button pressed, current page: $_currentPage',
                               );
+                              if (_currentPage < _pages.length - 1) {
+                                _pageController.nextPage(
+                                  duration: const Duration(milliseconds: 300),
+                                  curve: Curves.easeInOut,
+                                );
+                              }
                             },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: AppColors.primary,
+                              elevation: 0,
                               padding: const EdgeInsets.symmetric(vertical: 16),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(12),
@@ -198,18 +201,18 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                           context.go('/login');
                         },
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.white,
+                          backgroundColor: AppColors.primary,
                           padding: const EdgeInsets.symmetric(vertical: 16),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),
                           ),
                         ),
-                        child: Text(
+                        child: const Text(
                           'Get Started',
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
-                            color: Colors.orange,
+                            color: Colors.white,
                           ),
                         ),
                       ),

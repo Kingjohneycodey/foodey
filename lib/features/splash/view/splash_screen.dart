@@ -8,10 +8,22 @@ class SplashScreen extends StatefulWidget {
   State<SplashScreen> createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen> {
+class _SplashScreenState extends State<SplashScreen>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _animationController;
+  late Animation<double> _bounceAnimation;
+
   @override
   void initState() {
     super.initState();
+    _animationController = AnimationController(
+      duration: const Duration(milliseconds: 2000),
+      vsync: this,
+    );
+    _bounceAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(parent: _animationController, curve: Curves.bounceOut),
+    );
+    _animationController.repeat(count: 3);
     _navigateToOnboarding();
   }
 
@@ -24,6 +36,12 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
@@ -33,10 +51,13 @@ class _SplashScreenState extends State<SplashScreen> {
           children: [
             Image.asset('assets/images/splash.png', fit: BoxFit.cover),
             Center(
-              child: Image.asset(
-                'assets/images/logo-icon.png',
-                width: 150,
-                height: 150,
+              child: ScaleTransition(
+                scale: _bounceAnimation,
+                child: Image.asset(
+                  'assets/images/logo-icon.png',
+                  width: 150,
+                  height: 150,
+                ),
               ),
             ),
           ],
