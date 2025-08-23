@@ -104,6 +104,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               },
             ),
           ),
+
           // Bottom controls
           Positioned(
             bottom: 0,
@@ -121,13 +122,13 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       (index) => AnimatedContainer(
                         duration: const Duration(milliseconds: 300),
                         margin: const EdgeInsets.symmetric(horizontal: 4),
-                        height: 8,
-                        width: _currentPage == index ? 24 : 8,
+                        height: 10,
+                        width: _currentPage == index ? 30 : 10,
                         decoration: BoxDecoration(
                           color: _currentPage == index
-                              ? Colors.white
-                              : Colors.white.withOpacity(0.4),
-                          borderRadius: BorderRadius.circular(4),
+                              ? AppColors.primary
+                              : Colors.grey.withOpacity(0.3),
+                          borderRadius: BorderRadius.circular(5),
                         ),
                       ),
                     ),
