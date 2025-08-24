@@ -13,6 +13,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   final PageController _pageController = PageController();
   int _currentPage = 0;
 
+  // Only first 3 slides here
   final List<OnboardingPage> _pages = [
     OnboardingPage(
       title: 'Welcome to the most tastiest app',
@@ -43,17 +44,28 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     return Scaffold(
       body: Stack(
         children: [
-          // Static background color (no gradient)
           Container(color: AppColors.background),
-          // Only the image and text swipe
+          Positioned(
+            top: MediaQuery.of(context).padding.top + 10,
+            left: 0,
+            right: 0,
+            child: Center(
+              child: Text(
+                "Foodey",
+                style: TextStyle(
+                  fontSize: 28,
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.primary,
+                  fontFamily: 'Pacifico',
+                ),
+              ),
+            ),
+          ),
           SafeArea(
             child: PageView.builder(
               controller: _pageController,
               onPageChanged: (index) {
-                print('Page changed to: $index');
-                setState(() {
-                  _currentPage = index;
-                });
+                setState(() => _currentPage = index);
               },
               itemCount: _pages.length,
               itemBuilder: (context, index) {
@@ -62,17 +74,14 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   children: [
                     Expanded(
                       flex: 3,
-                      child: Container(
-                        padding: const EdgeInsets.all(0),
-                        child: Image.asset(
-                          _pages[index].image,
-                          fit: BoxFit.contain,
-                        ),
+                      child: Image.asset(
+                        _pages[index].image,
+                        fit: BoxFit.contain,
                       ),
                     ),
                     Expanded(
                       flex: 2,
-                      child: Container(
+                      child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 32),
                         child: Column(
                           children: [
@@ -104,7 +113,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               },
             ),
           ),
-
           // Bottom controls
           Positioned(
             bottom: 0,
@@ -115,6 +123,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
+                  // Indicators
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: List.generate(
@@ -134,90 +143,64 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     ),
                   ),
                   const SizedBox(height: 32),
-                  if (_currentPage < _pages.length - 1)
-                    Row(
-                      children: [
-                        Expanded(
-                          child: ElevatedButton(
-                            onPressed: () {
-                              context.go('/login');
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: const Color(0xFFE8F5E8),
-                              elevation: 0,
-                              padding: const EdgeInsets.symmetric(vertical: 16),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                            ),
-                            child: const Text(
-                              'Skip',
-                              style: TextStyle(
-                                color: Color(0xFF5CAB1A),
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                              ),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: ElevatedButton(
+                          onPressed: () => context.go('/register'),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFFE8F5E8),
+                            elevation: 0,
+                            padding: const EdgeInsets.symmetric(vertical: 16),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
                             ),
                           ),
-                        ),
-                        const SizedBox(width: 16),
-                        Expanded(
-                          child: ElevatedButton(
-                            onPressed: () {
-                              print(
-                                'Next button pressed, current page: $_currentPage',
-                              );
-                              if (_currentPage < _pages.length - 1) {
-                                _pageController.nextPage(
-                                  duration: const Duration(milliseconds: 300),
-                                  curve: Curves.easeInOut,
-                                );
-                              }
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: AppColors.primary,
-                              elevation: 0,
-                              padding: const EdgeInsets.symmetric(vertical: 16),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
+                          child: const Text(
+                            'Skip',
+                            style: TextStyle(
+                              color: Color(0xFF5CAB1A),
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
                             ),
-                            child: Text(
-                              'Next',
-                              style: const TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    )
-                  else
-                    SizedBox(
-                      width: double.infinity,
-                      child: ElevatedButton(
-                        onPressed: () {
-                          context.go('/login');
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: AppColors.primary,
-                          padding: const EdgeInsets.symmetric(vertical: 16),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                        ),
-                        child: const Text(
-                          'Get Started',
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
                           ),
                         ),
                       ),
-                    ),
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: ElevatedButton(
+                          onPressed: () {
+                            if (_currentPage < _pages.length - 1) {
+                              _pageController.nextPage(
+                                duration: const Duration(milliseconds: 300),
+                                curve: Curves.easeInOut,
+                              );
+                            } else {
+                              context.go('/onboarding2');
+                            }
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors.primary,
+                            elevation: 0,
+                            padding: const EdgeInsets.symmetric(vertical: 16),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                          ),
+                          child: Text(
+                            _currentPage == _pages.length - 1
+                                ? 'Continue'
+                                : 'Next',
+                            style: const TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ],
               ),
             ),

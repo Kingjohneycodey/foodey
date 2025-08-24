@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:foodey/features/onboarding/view/onboarding_screen2.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../features/splash/view/splash_screen.dart';
@@ -18,6 +19,10 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path: '/onboarding',
       builder: (context, state) => const OnboardingScreen(),
+    ),
+    GoRoute(
+      path: '/onboarding2',
+      builder: (context, state) => const OnboardingScreen2(),
     ),
     GoRoute(path: '/login', builder: (context, state) => const LoginScreen()),
     GoRoute(
