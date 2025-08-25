@@ -23,7 +23,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   bool get _isPasswordValid {
     final password = _passwordController.text;
-    return password.length >= 6; // Minimum 6 characters
+    return password.length >= 6;
   }
 
   bool get _canProceed {
