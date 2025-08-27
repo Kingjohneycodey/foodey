@@ -21,6 +21,7 @@ class _LoginScreenState extends State<LoginScreen> {
         RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(email);
   }
 
+  // Password validation
   bool get _isPasswordValid {
     final password = _passwordController.text;
     return password.length >= 6;
