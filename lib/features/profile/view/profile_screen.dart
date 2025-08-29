@@ -10,24 +10,27 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        // Custom app bar
-        Container(
-          padding: const EdgeInsets.all(16),
-          child: const Row(
-            children: [
-              Text(
-                'Profile',
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-              ),
-            ],
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 56.0),
+      child: Column(
+        children: [
+          // Custom app bar
+          Container(
+            padding: const EdgeInsets.all(16),
+            child: const Row(
+              children: [
+                Text(
+                  'Profile',
+                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                ),
+              ],
+            ),
           ),
-        ),
 
-        // Main content
-        const Expanded(child: Center(child: Text('Profile Screen Content'))),
-      ],
+          // Main content
+          const Expanded(child: Center(child: Text('Profile Screen Content'))),
+        ],
+      ),
     );
   }
 }

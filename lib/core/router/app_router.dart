@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:foodey/core/theme/app_colors.dart';
 import 'package:foodey/features/onboarding/view/onboarding_screen2.dart';
 import 'package:go_router/go_router.dart';
 
@@ -31,37 +32,37 @@ final GoRouter appRouter = GoRouter(
     ),
     GoRoute(
       path: '/home',
-      builder: (context, state) => const MainAppScreen(currentIndex: 0),
+      builder: (context, state) => const MainAppShell(currentIndex: 0),
     ),
     GoRoute(
       path: '/menu',
-      builder: (context, state) => const MainAppScreen(currentIndex: 1),
+      builder: (context, state) => const MainAppShell(currentIndex: 1),
     ),
     GoRoute(
       path: '/cart',
-      builder: (context, state) => const MainAppScreen(currentIndex: 2),
+      builder: (context, state) => const MainAppShell(currentIndex: 2),
     ),
     GoRoute(
       path: '/orders',
-      builder: (context, state) => const MainAppScreen(currentIndex: 3),
+      builder: (context, state) => const MainAppShell(currentIndex: 3),
     ),
     GoRoute(
       path: '/profile',
-      builder: (context, state) => const MainAppScreen(currentIndex: 4),
+      builder: (context, state) => const MainAppShell(currentIndex: 4),
     ),
   ],
 );
 
-class MainAppScreen extends StatefulWidget {
+class MainAppShell extends StatefulWidget {
   final int currentIndex;
 
-  const MainAppScreen({super.key, required this.currentIndex});
+  const MainAppShell({super.key, required this.currentIndex});
 
   @override
-  State<MainAppScreen> createState() => _MainAppScreenState();
+  State<MainAppShell> createState() => _MainAppShellState();
 }
 
-class _MainAppScreenState extends State<MainAppScreen> {
+class _MainAppShellState extends State<MainAppShell> {
   late int _currentIndex;
 
   @override
@@ -70,84 +71,67 @@ class _MainAppScreenState extends State<MainAppScreen> {
     _currentIndex = widget.currentIndex;
   }
 
-  Widget _buildBody() {
-    print('Building body for index: $_currentIndex');
-    switch (_currentIndex) {
-      case 0:
-        return const HomeScreen();
-      case 1:
-        return const MenuScreen();
-      case 2:
-        return const CartScreen();
-      case 3:
-        return const OrdersScreen();
-      case 4:
-        return const ProfileScreen();
-      default:
-        return const HomeScreen();
+  @override
+  void didUpdateWidget(MainAppShell oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.currentIndex != widget.currentIndex) {
+      setState(() {
+        _currentIndex = widget.currentIndex;
+      });
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    print('MainAppScreen building with index: $_currentIndex');
     return Scaffold(
-      backgroundColor: Colors.white,
-      body: SafeArea(
-        bottom:
-            false, // Don't add bottom safe area since we have bottom navigation
-        child: _buildBody(),
+      body: IndexedStack(
+        index: _currentIndex,
+        children: const [
+          HomeScreen(),
+          MenuScreen(),
+          CartScreen(),
+          OrdersScreen(),
+          ProfileScreen(),
+        ],
       ),
-      bottomNavigationBar: SafeArea(
-        child: Container(
-          height: 80,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            border: Border(
-              top: BorderSide(color: Colors.grey.shade300, width: 2),
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.1),
-                blurRadius: 4,
-                offset: const Offset(0, -2),
-              ),
-            ],
+      bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        backgroundColor: Colors.white,
+        selectedItemColor: AppColors.primary,
+        unselectedItemColor: Colors.grey,
+        currentIndex: _currentIndex,
+        onTap: (index) {
+          setState(() {
+            _currentIndex = index;
+          });
+          switch (index) {
+            case 0:
+              context.go('/home');
+              break;
+            case 1:
+              context.go('/menu');
+              break;
+            case 2:
+              context.go('/cart');
+              break;
+            case 3:
+              context.go('/orders');
+              break;
+            case 4:
+              context.go('/profile');
+              break;
+          }
+        },
+        items: const [
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
+          BottomNavigationBarItem(icon: Icon(Icons.restaurant), label: "Menu"),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.shopping_cart),
+            label: "Cart",
           ),
-          child: BottomNavigationBar(
-            type: BottomNavigationBarType.fixed,
-            backgroundColor: Colors.transparent,
-            elevation: 0,
-            selectedItemColor: Colors.blue,
-            unselectedItemColor: Colors.grey,
-            currentIndex: _currentIndex,
-            onTap: (index) {
-              print('Tab tapped: $index');
-              setState(() {
-                _currentIndex = index;
-              });
-            },
-            items: const [
-              BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.restaurant),
-                label: "Menu",
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.shopping_cart),
-                label: "Cart",
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.receipt),
-                label: "Orders",
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.person),
-                label: "Profile",
-              ),
-            ],
-          ),
-        ),
+          BottomNavigationBarItem(icon: Icon(Icons.receipt), label: "Orders"),
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: "Profile"),
+        ],
       ),
     );
   }
