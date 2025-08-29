@@ -9,10 +9,37 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Home')),
-      body: const Center(child: Text('Home Screen')),
+    return Column(
+      children: [
+        // Custom app bar
+        Container(
+          padding: const EdgeInsets.all(16),
+          child: Row(
+            children: [
+              const Text(
+                'Home',
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              ),
+              const Spacer(),
+              IconButton(
+                icon: const Icon(Icons.notifications),
+                onPressed: () {
+                  // Handle notifications
+                },
+              ),
+            ],
+          ),
+        ),
+
+        // Main content
+        const Expanded(child: Center(child: Text('Home Screen Content'))),
+      ],
     );
   }
 }

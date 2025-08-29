@@ -10,9 +10,24 @@ class OrdersScreen extends StatefulWidget {
 class _OrdersScreenState extends State<OrdersScreen> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Orders')),
-      body: const Center(child: Text('Orders Screen')),
+    return Column(
+      children: [
+        // Custom app bar
+        Container(
+          padding: const EdgeInsets.all(16),
+          child: const Row(
+            children: [
+              Text(
+                'Orders',
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              ),
+            ],
+          ),
+        ),
+
+        // Main content
+        const Expanded(child: Center(child: Text('Orders Screen Content'))),
+      ],
     );
   }
 }

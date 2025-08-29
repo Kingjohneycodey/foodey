@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
       themeMode: ThemeMode.system,
-      routerConfig: appRouter, // imported from app_router.dart
+      routerConfig: appRouter,
     );
   }
 }

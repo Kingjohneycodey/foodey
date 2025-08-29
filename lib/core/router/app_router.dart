@@ -29,30 +29,103 @@ final GoRouter appRouter = GoRouter(
       path: '/register',
       builder: (context, state) => const RegisterScreen(),
     ),
-    ShellRoute(
-      builder: (context, state, child) {
-        return Scaffold(
-          body: child,
-          bottomNavigationBar: BottomNavigationBar(
-            currentIndex: _getIndex(state.uri.toString()),
+    GoRoute(
+      path: '/home',
+      builder: (context, state) => const MainAppScreen(currentIndex: 0),
+    ),
+    GoRoute(
+      path: '/menu',
+      builder: (context, state) => const MainAppScreen(currentIndex: 1),
+    ),
+    GoRoute(
+      path: '/cart',
+      builder: (context, state) => const MainAppScreen(currentIndex: 2),
+    ),
+    GoRoute(
+      path: '/orders',
+      builder: (context, state) => const MainAppScreen(currentIndex: 3),
+    ),
+    GoRoute(
+      path: '/profile',
+      builder: (context, state) => const MainAppScreen(currentIndex: 4),
+    ),
+  ],
+);
+
+class MainAppScreen extends StatefulWidget {
+  final int currentIndex;
+
+  const MainAppScreen({super.key, required this.currentIndex});
+
+  @override
+  State<MainAppScreen> createState() => _MainAppScreenState();
+}
+
+class _MainAppScreenState extends State<MainAppScreen> {
+  late int _currentIndex;
+
+  @override
+  void initState() {
+    super.initState();
+    _currentIndex = widget.currentIndex;
+  }
+
+  Widget _buildBody() {
+    print('Building body for index: $_currentIndex');
+    switch (_currentIndex) {
+      case 0:
+        return const HomeScreen();
+      case 1:
+        return const MenuScreen();
+      case 2:
+        return const CartScreen();
+      case 3:
+        return const OrdersScreen();
+      case 4:
+        return const ProfileScreen();
+      default:
+        return const HomeScreen();
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    print('MainAppScreen building with index: $_currentIndex');
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: SafeArea(
+        bottom:
+            false, // Don't add bottom safe area since we have bottom navigation
+        child: _buildBody(),
+      ),
+      bottomNavigationBar: SafeArea(
+        child: Container(
+          height: 80,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            border: Border(
+              top: BorderSide(color: Colors.grey.shade300, width: 2),
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.1),
+                blurRadius: 4,
+                offset: const Offset(0, -2),
+              ),
+            ],
+          ),
+          child: BottomNavigationBar(
+            type: BottomNavigationBarType.fixed,
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+            selectedItemColor: Colors.blue,
+            unselectedItemColor: Colors.grey,
+            currentIndex: _currentIndex,
             onTap: (index) {
-              switch (index) {
-                case 0:
-                  context.go('/home');
-                  break;
-                case 1:
-                  context.go('/menu');
-                  break;
-                case 2:
-                  context.go('/cart');
-                  break;
-                case 3:
-                  context.go('/orders');
-                  break;
-                case 4:
-                  context.go('/profile');
-                  break;
-              }
+              print('Tab tapped: $index');
+              setState(() {
+                _currentIndex = index;
+              });
             },
             items: const [
               BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
@@ -74,39 +147,8 @@ final GoRouter appRouter = GoRouter(
               ),
             ],
           ),
-        );
-      },
-      routes: [
-        GoRoute(path: '/home', builder: (context, state) => const HomeScreen()),
-        GoRoute(path: '/menu', builder: (context, state) => const MenuScreen()),
-        GoRoute(path: '/cart', builder: (context, state) => const CartScreen()),
-        GoRoute(
-          path: '/orders',
-          builder: (context, state) => const OrdersScreen(),
         ),
-        GoRoute(
-          path: '/profile',
-          builder: (context, state) => const ProfileScreen(),
-        ),
-      ],
-    ),
-  ],
-);
-
-/// Helper function for BottomNav index
-int _getIndex(String location) {
-  switch (location) {
-    case '/home':
-      return 0;
-    case '/menu':
-      return 1;
-    case '/cart':
-      return 2;
-    case '/orders':
-      return 3;
-    case '/profile':
-      return 4;
-    default:
-      return 0;
+      ),
+    );
   }
 }
