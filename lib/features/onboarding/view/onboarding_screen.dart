@@ -147,7 +147,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     children: [
                       Expanded(
                         child: ElevatedButton(
-                          onPressed: () => context.go('/register'),
+                          onPressed: () => context.go('/onboarding2'),
                           style: ElevatedButton.styleFrom(
                             backgroundColor: const Color(0xFFE8F5E8),
                             elevation: 0,

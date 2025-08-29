@@ -100,6 +100,7 @@ class OnboardingScreen2 extends StatelessWidget {
                           borderRadius: BorderRadius.circular(12),
                         ),
                       ),
+                      icon: const Icon(Icons.email, color: Colors.white),
                       label: const Text(
                         'Continue with Email',
                         style: TextStyle(
@@ -124,7 +125,7 @@ class OnboardingScreen2 extends StatelessWidget {
                     children: [
                       Expanded(
                         child: ElevatedButton(
-                          onPressed: () => context.go('/google'),
+                          onPressed: () => context.go('/register'),
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.white,
                             elevation: 1,
@@ -144,7 +145,7 @@ class OnboardingScreen2 extends StatelessWidget {
                       const SizedBox(width: 12),
                       Expanded(
                         child: ElevatedButton(
-                          onPressed: () => context.go('/login'),
+                          onPressed: () => context.go('/register'),
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.white,
                             elevation: 1,
