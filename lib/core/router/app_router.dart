@@ -30,80 +30,60 @@ final GoRouter appRouter = GoRouter(
       path: '/register',
       builder: (context, state) => const RegisterScreen(),
     ),
-    GoRoute(
-      path: '/home',
-      builder: (context, state) => const MainAppShell(currentIndex: 0),
-    ),
-    GoRoute(
-      path: '/menu',
-      builder: (context, state) => const MainAppShell(currentIndex: 1),
-    ),
-    GoRoute(
-      path: '/cart',
-      builder: (context, state) => const MainAppShell(currentIndex: 2),
-    ),
-    GoRoute(
-      path: '/orders',
-      builder: (context, state) => const MainAppShell(currentIndex: 3),
-    ),
-    GoRoute(
-      path: '/profile',
-      builder: (context, state) => const MainAppShell(currentIndex: 4),
+    ShellRoute(
+      builder: (context, state, child) {
+        return MainAppShell(child: child);
+      },
+      routes: [
+        GoRoute(
+          path: '/home',
+          pageBuilder: (context, state) =>
+              NoTransitionPage(child: const HomeScreen()),
+        ),
+        GoRoute(
+          path: '/menu',
+          pageBuilder: (context, state) =>
+              NoTransitionPage(child: const MenuScreen()),
+        ),
+        GoRoute(
+          path: '/cart',
+          pageBuilder: (context, state) =>
+              NoTransitionPage(child: const CartScreen()),
+        ),
+        GoRoute(
+          path: '/orders',
+          pageBuilder: (context, state) =>
+              NoTransitionPage(child: const OrdersScreen()),
+        ),
+        GoRoute(
+          path: '/profile',
+          pageBuilder: (context, state) =>
+              NoTransitionPage(child: const ProfileScreen()),
+        ),
+      ],
     ),
   ],
 );
 
-class MainAppShell extends StatefulWidget {
-  final int currentIndex;
+class MainAppShell extends StatelessWidget {
+  final Widget child;
 
-  const MainAppShell({super.key, required this.currentIndex});
-
-  @override
-  State<MainAppShell> createState() => _MainAppShellState();
-}
-
-class _MainAppShellState extends State<MainAppShell> {
-  late int _currentIndex;
-
-  @override
-  void initState() {
-    super.initState();
-    _currentIndex = widget.currentIndex;
-  }
-
-  @override
-  void didUpdateWidget(MainAppShell oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (oldWidget.currentIndex != widget.currentIndex) {
-      setState(() {
-        _currentIndex = widget.currentIndex;
-      });
-    }
-  }
+  const MainAppShell({super.key, required this.child});
 
   @override
   Widget build(BuildContext context) {
+    final location = GoRouterState.of(context).uri.toString();
+    final currentIndex = _getIndex(location);
+
     return Scaffold(
-      body: IndexedStack(
-        index: _currentIndex,
-        children: const [
-          HomeScreen(),
-          MenuScreen(),
-          CartScreen(),
-          OrdersScreen(),
-          ProfileScreen(),
-        ],
-      ),
+      body: child,
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         backgroundColor: Colors.white,
         selectedItemColor: AppColors.primary,
         unselectedItemColor: Colors.grey,
-        currentIndex: _currentIndex,
+        currentIndex: currentIndex,
         onTap: (index) {
-          setState(() {
-            _currentIndex = index;
-          });
           switch (index) {
             case 0:
               context.go('/home');
@@ -134,5 +114,23 @@ class _MainAppShellState extends State<MainAppShell> {
         ],
       ),
     );
+  }
+
+  /// Helper function for BottomNav index
+  int _getIndex(String location) {
+    switch (location) {
+      case '/home':
+        return 0;
+      case '/menu':
+        return 1;
+      case '/cart':
+        return 2;
+      case '/orders':
+        return 3;
+      case '/profile':
+        return 4;
+      default:
+        return 0;
+    }
   }
 }
