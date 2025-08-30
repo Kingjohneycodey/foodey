@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:foodey/core/theme/app_colors.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -8,39 +9,397 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  final PageController _pageController = PageController();
+  int _currentPage = 0;
+  int _selectedCategory = 0;
+
+  final List<String> categories = [
+    'Offers',
+    'Burger',
+    'Pizza',
+    'Donuts',
+    'Ice Cream',
+    'Salad',
+    'Sandwich',
+    'Snacks',
+    'Soup',
+    'Other',
+  ];
+
   @override
-  void initState() {
-    super.initState();
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 56.0),
-      child: Column(
-        children: [
-          // Custom app bar
-          Container(
-            padding: const EdgeInsets.all(16),
-            child: Row(
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.only(bottom: 20.0),
+          child: SingleChildScrollView(
+            child: Column(
               children: [
-                const Text(
-                  'Home',
-                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                // Custom app bar
+                Container(
+                  padding: const EdgeInsets.only(
+                    bottom: 16,
+                    left: 16,
+                    right: 16,
+                  ),
+                  child: Row(
+                    children: [
+                      // Profile image
+                      Container(
+                        width: 50,
+                        height: 50,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                          image: const DecorationImage(
+                            image: AssetImage('assets/images/avatar1.png'),
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                      SizedBox(width: 12),
+                      // Greeting text
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text('Hi Daniel', style: TextStyle(fontSize: 16)),
+                          Text(
+                            'What are you craving?',
+                            style: TextStyle(fontSize: 18),
+                          ),
+                        ],
+                      ),
+                      const Spacer(),
+                      IconButton(
+                        icon: const Icon(Icons.notifications),
+                        onPressed: () {
+                          // Handle notifications
+                        },
+                      ),
+                    ],
+                  ),
                 ),
-                const Spacer(),
-                IconButton(
-                  icon: const Icon(Icons.notifications),
-                  onPressed: () {
-                    // Handle notifications
+
+                // Search bar
+                Container(
+                  margin: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 10,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: Colors.grey.shade300),
+                  ),
+                  child: TextField(
+                    decoration: InputDecoration(
+                      hintText: 'search...',
+                      hintStyle: TextStyle(color: Colors.grey.shade500),
+                      prefixIcon: Icon(
+                        Icons.search,
+                        color: Colors.grey.shade500,
+                      ),
+                      border: InputBorder.none,
+                      contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 12,
+                      ),
+                    ),
+                  ),
+                ),
+
+                // Image slider
+                Container(
+                  height:
+                      MediaQuery.of(context).size.width *
+                      0.4, // 40% of screen width
+                  margin: const EdgeInsets.symmetric(vertical: 10),
+                  child: PageView.builder(
+                    controller: _pageController,
+                    onPageChanged: (index) {
+                      setState(() {
+                        _currentPage = index;
+                      });
+                    },
+                    itemCount: 3,
+                    itemBuilder: (context, index) {
+                      return Container(
+                        margin: const EdgeInsets.symmetric(horizontal: 16),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(16),
+                          image: DecorationImage(
+                            image: AssetImage('assets/images/banner.png'),
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+
+                // Page indicators
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: List.generate(3, (index) {
+                    return Container(
+                      width: 8,
+                      height: 8,
+                      margin: const EdgeInsets.symmetric(horizontal: 4),
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: _currentPage == index
+                            ? AppColors.primary
+                            : Colors.grey.shade300,
+                      ),
+                    );
+                  }),
+                ),
+
+                // Categories
+                Container(
+                  height: 40,
+                  margin: const EdgeInsets.symmetric(vertical: 20),
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: categories.length,
+                    itemBuilder: (context, index) {
+                      bool isSelected = _selectedCategory == index;
+                      return Container(
+                        margin: EdgeInsets.only(
+                          left: index == 0 ? 16 : 8,
+                          right: index == categories.length - 1 ? 16 : 0,
+                        ),
+                        child: GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              _selectedCategory = index;
+                            });
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 20,
+                              vertical: 8,
+                            ),
+                            decoration: BoxDecoration(
+                              color: isSelected ? AppColors.light : null,
+                              borderRadius: BorderRadius.circular(10),
+                              border: isSelected
+                                  ? null
+                                  : Border.all(
+                                      color: Color(0xFFE8EBE6),
+                                      width: 1,
+                                    ),
+                            ),
+                            child: Text(
+                              categories[index],
+                              style: TextStyle(
+                                color: isSelected
+                                    ? Colors.grey.shade800
+                                    : Color(0xFF70756B),
+                                fontSize: 14,
+                                fontWeight: isSelected
+                                    ? FontWeight.w600
+                                    : FontWeight.normal,
+                              ),
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+
+                // List of items
+                GridView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 4,
+                  ),
+                  gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                    maxCrossAxisExtent: 180,
+                    childAspectRatio: 0.8,
+                    crossAxisSpacing: 16,
+                    mainAxisSpacing: 16,
+                  ),
+                  itemCount: 6, // Number of food items
+                  itemBuilder: (context, index) {
+                    return _buildFoodCard(index);
                   },
                 ),
               ],
             ),
           ),
+        ),
+      ),
+    );
+  }
 
-          // Main content
-          const Expanded(child: Center(child: Text('Home Screen Content'))),
+  Widget _buildFoodCard(int index) {
+    final List<Map<String, dynamic>> foodItems = [
+      {
+        'name': 'Classic Burger',
+        'price': '\$12.75',
+        'rating': '4.7',
+        'image': 'assets/images/burger1.jpeg',
+      },
+      {
+        'name': 'Pepperoni Pizza',
+        'price': '\$18.50',
+        'rating': '4.8',
+        'image': 'assets/images/burger1.jpeg',
+      },
+      {
+        'name': 'Chocolate Donut',
+        'price': '\$3.99',
+        'rating': '4.6',
+        'image': 'assets/images/burger1.jpeg',
+      },
+      {
+        'name': 'Caesar Salad',
+        'price': '\$9.25',
+        'rating': '4.5',
+        'image': 'assets/images/burger1.jpeg',
+      },
+      {
+        'name': 'Ice Cream Cone',
+        'price': '\$4.50',
+        'rating': '4.9',
+        'image': 'assets/images/burger1.jpeg',
+      },
+      {
+        'name': 'Chicken Sandwich',
+        'price': '\$11.25',
+        'rating': '4.7',
+        'image': 'assets/images/burger1.jpeg',
+      },
+    ];
+
+    final item = foodItems[index];
+
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Food image with rating badge
+          Expanded(
+            flex: 2,
+            child: Stack(
+              children: [
+                Container(
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    borderRadius: const BorderRadius.vertical(
+                      top: Radius.circular(16),
+                    ),
+                    image: DecorationImage(
+                      image: AssetImage(item['image']),
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+                // Rating badge
+                Positioned(
+                  bottom: 8,
+                  left: 8,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 4,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(Icons.star, color: Colors.orange, size: 16),
+                        const SizedBox(width: 4),
+                        Text(
+                          item['rating'],
+                          style: const TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          // Food details
+          Expanded(
+            flex: 1,
+            child: Padding(
+              padding: const EdgeInsets.all(12),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          item['name'],
+                          style: const TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          item['price'],
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.grey.shade600,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  // Add to cart button
+                  const SizedBox(width: 10),
+                  Container(
+                    width: 32,
+                    height: 32,
+                    decoration: BoxDecoration(
+                      color: AppColors.light,
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    child: const Icon(
+                      Icons.add,
+                      color: AppColors.primary,
+                      size: 20,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
         ],
       ),
     );
