@@ -86,17 +86,25 @@ class _LoginScreenState extends State<LoginScreen> {
               const SizedBox(height: 20),
 
               // Title
-              const Text(
-                'Welcome back',
-                style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+              Align(
+                alignment: Alignment.center,
+                child: const Text(
+                  'Welcome back',
+                  style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+                  textAlign: TextAlign.center,
+                ),
               ),
 
               const SizedBox(height: 8),
 
               // Subtitle
-              const Text(
-                'Sign in to your account',
-                style: TextStyle(fontSize: 16, color: Color(0xFF60655C)),
+              Align(
+                alignment: Alignment.center,
+                child: const Text(
+                  'Sign in to your account',
+                  style: TextStyle(fontSize: 16, color: Color(0xFF60655C)),
+                  textAlign: TextAlign.center,
+                ),
               ),
 
               const SizedBox(height: 32),

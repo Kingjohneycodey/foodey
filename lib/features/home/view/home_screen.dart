@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:foodey/core/theme/app_colors.dart';
+import 'package:go_router/go_router.dart';
+import 'package:foodey/core/data/products_data.dart';
+import 'package:foodey/core/models/product.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -15,15 +18,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   final List<String> categories = [
     'Offers',
-    'Burger',
-    'Pizza',
-    'Donuts',
-    'Ice Cream',
-    'Salad',
-    'Sandwich',
-    'Snacks',
-    'Soup',
-    'Other',
+    ...ProductsData.getAllCategories(),
   ];
 
   @override
@@ -69,7 +64,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Text('Hi Daniel', style: TextStyle(fontSize: 16)),
+                          Text('Hi Johney', style: TextStyle(fontSize: 16)),
                           Text(
                             'What are you craving?',
                             style: TextStyle(fontSize: 18),
@@ -99,8 +94,12 @@ class _HomeScreenState extends State<HomeScreen> {
                     border: Border.all(color: Colors.grey.shade300),
                   ),
                   child: TextField(
+                    readOnly: true,
+                    onTap: () {
+                      context.push('/search');
+                    },
                     decoration: InputDecoration(
-                      hintText: 'search...',
+                      hintText: 'Search for food...',
                       hintStyle: TextStyle(color: Colors.grey.shade500),
                       prefixIcon: Icon(
                         Icons.search,
@@ -230,9 +229,11 @@ class _HomeScreenState extends State<HomeScreen> {
                     crossAxisSpacing: 16,
                     mainAxisSpacing: 16,
                   ),
-                  itemCount: 6, // Number of food items
+                  itemCount: _getProductsForSelectedCategory().length,
                   itemBuilder: (context, index) {
-                    return _buildFoodCard(index);
+                    return _buildFoodCard(
+                      _getProductsForSelectedCategory()[index],
+                    );
                   },
                 ),
               ],
@@ -243,48 +244,17 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildFoodCard(int index) {
-    final List<Map<String, dynamic>> foodItems = [
-      {
-        'name': 'Classic Burger',
-        'price': '\$12.75',
-        'rating': '4.7',
-        'image': 'assets/images/burger1.jpeg',
-      },
-      {
-        'name': 'Pepperoni Pizza',
-        'price': '\$18.50',
-        'rating': '4.8',
-        'image': 'assets/images/burger1.jpeg',
-      },
-      {
-        'name': 'Chocolate Donut',
-        'price': '\$3.99',
-        'rating': '4.6',
-        'image': 'assets/images/burger1.jpeg',
-      },
-      {
-        'name': 'Caesar Salad',
-        'price': '\$9.25',
-        'rating': '4.5',
-        'image': 'assets/images/burger1.jpeg',
-      },
-      {
-        'name': 'Ice Cream Cone',
-        'price': '\$4.50',
-        'rating': '4.9',
-        'image': 'assets/images/burger1.jpeg',
-      },
-      {
-        'name': 'Chicken Sandwich',
-        'price': '\$11.25',
-        'rating': '4.7',
-        'image': 'assets/images/burger1.jpeg',
-      },
-    ];
+  List<Product> _getProductsForSelectedCategory() {
+    if (_selectedCategory == 0) {
+      // Offers category - show first 6 products
+      return ProductsData.allProducts.take(6).toList();
+    } else {
+      final categoryName = categories[_selectedCategory];
+      return ProductsData.getProductsByCategory(categoryName);
+    }
+  }
 
-    final item = foodItems[index];
-
+  Widget _buildFoodCard(Product product) {
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -312,7 +282,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       top: Radius.circular(16),
                     ),
                     image: DecorationImage(
-                      image: AssetImage(item['image']),
+                      image: AssetImage(product.image),
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -336,7 +306,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         Icon(Icons.star, color: Colors.orange, size: 16),
                         const SizedBox(width: 4),
                         Text(
-                          item['rating'],
+                          product.rating.toString(),
                           style: const TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.w600,
@@ -362,7 +332,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          item['name'],
+                          product.name,
                           style: const TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w600,
@@ -372,7 +342,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          item['price'],
+                          '\$${product.price.toStringAsFixed(2)}',
                           style: TextStyle(
                             fontSize: 12,
                             color: Colors.grey.shade600,

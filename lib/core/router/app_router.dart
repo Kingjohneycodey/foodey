@@ -12,6 +12,7 @@ import '../../features/menu/view/menu_screen.dart';
 import '../../features/cart/view/cart_screen.dart';
 import '../../features/orders/view/orders_screen.dart';
 import '../../features/profile/view/profile_screen.dart';
+import '../../features/search/view/search_screen.dart';
 
 final GoRouter appRouter = GoRouter(
   initialLocation: '/splash',
@@ -59,6 +60,11 @@ final GoRouter appRouter = GoRouter(
           path: '/profile',
           pageBuilder: (context, state) =>
               NoTransitionPage(child: const ProfileScreen()),
+        ),
+        GoRoute(
+          path: '/search',
+          pageBuilder: (context, state) =>
+              NoTransitionPage(child: const SearchScreen()),
         ),
       ],
     ),
