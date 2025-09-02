@@ -13,6 +13,8 @@ import '../../features/cart/view/cart_screen.dart';
 import '../../features/orders/view/orders_screen.dart';
 import '../../features/profile/view/profile_screen.dart';
 import '../../features/search/view/search_screen.dart';
+import '../../core/models/product.dart';
+import '../../features/menu/view/product_detail_screen.dart';
 
 final GoRouter appRouter = GoRouter(
   initialLocation: '/splash',
@@ -65,6 +67,19 @@ final GoRouter appRouter = GoRouter(
           path: '/search',
           pageBuilder: (context, state) =>
               NoTransitionPage(child: const SearchScreen()),
+        ),
+        GoRoute(
+          path: '/product/:id',
+          builder: (context, state) {
+            final extra = state.extra;
+            if (extra is Product) {
+              return ProductDetailScreen(product: extra);
+            }
+            // Fallback: if no product provided, show an empty scaffold
+            return const Scaffold(
+              body: Center(child: Text('Product not found')),
+            );
+          },
         ),
       ],
     ),
