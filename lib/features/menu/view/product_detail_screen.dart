@@ -212,7 +212,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                           '\$${(product.price * _quantity).toStringAsFixed(2)}',
                           style: const TextStyle(
                             fontSize: 28,
-                            fontWeight: FontWeight.w800,
+                            fontWeight: FontWeight.w700,
                           ),
                         ),
                         const Spacer(),
