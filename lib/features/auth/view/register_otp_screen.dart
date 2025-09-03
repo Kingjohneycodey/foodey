@@ -277,7 +277,7 @@ class _RegisterOtpScreenState extends State<RegisterOtpScreen> {
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: _otp.length == 4 ? () {} : null,
+                  onPressed: _otp.length == 4 ? _onVerifyPressed : null,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: _otp.length == 4
                         ? AppColors.primary
@@ -307,5 +307,27 @@ class _RegisterOtpScreenState extends State<RegisterOtpScreen> {
     final mm = (seconds ~/ 60).toString().padLeft(2, '0');
     final ss = (seconds % 60).toString().padLeft(2, '0');
     return '$mm:$ss';
+  }
+
+  void _onVerifyPressed() {
+    _showAlert(title: 'Verification', message: 'Code entered: ' + _otp);
+  }
+
+  void _showAlert({required String title, required String message}) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text(title),
+          content: Text(message),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
   }
 }
