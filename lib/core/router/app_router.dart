@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:foodey/core/theme/app_colors.dart';
+import 'package:foodey/features/auth/view/register_otp_screen.dart';
 import 'package:foodey/features/onboarding/view/onboarding_screen2.dart';
 import 'package:go_router/go_router.dart';
 
@@ -33,6 +34,11 @@ final GoRouter appRouter = GoRouter(
       path: '/register',
       builder: (context, state) => const RegisterScreen(),
     ),
+    GoRoute(
+      path: '/register-otp',
+      builder: (context, state) => const RegisterOtpScreen(),
+    ),
+
     ShellRoute(
       builder: (context, state, child) {
         return MainAppShell(child: child);

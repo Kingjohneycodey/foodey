@@ -4,6 +4,7 @@ import 'package:foodey/core/theme/app_theme.dart';
 import 'core/router/app_router.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(const ProviderScope(child: MyApp()));
 }
 

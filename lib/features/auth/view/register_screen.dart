@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:foodey/core/theme/app_colors.dart';
 import 'package:go_router/go_router.dart';
+import 'package:foodey/core/data/registration_state.dart';
+import 'package:foodey/core/utils/local_storage.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -34,9 +37,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
   // Registration function
   void _handleRegistration() {
     if (_canProceed) {
-      // Handle registration logic here
-      // You can add API calls, validation, etc.
-      context.go('/home');
+      // Save email to provider for next screen
+      final container = ProviderScope.containerOf(context);
+      container.read(registrationEmailProvider.notifier).state =
+          _emailController.text.trim();
+      // Persist locally so it survives app restarts
+      LocalStorage.setString(
+        LocalStorage.registrationEmailKey,
+        _emailController.text.trim(),
+      );
+      context.go('/register-otp');
     }
   }
 
@@ -85,10 +95,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
               ),
               const SizedBox(height: 20),
 
-              // Title
-              const Text(
-                'Create a new account',
-                style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+              Align(
+                alignment: Alignment.center,
+                child: Text(
+                  'Create a new account',
+                  style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+                ),
               ),
 
               const SizedBox(height: 20),
