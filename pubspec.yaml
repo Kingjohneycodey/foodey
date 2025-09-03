@@ -28,6 +28,7 @@ dependencies:
   flutter_riverpod: ^2.6.1
   cupertino_icons: ^1.0.8
   shared_preferences: ^2.5.3
+  another_flushbar: ^1.12.31
 
 dev_dependencies:
   flutter_test:

@@ -5,6 +5,7 @@ import 'package:foodey/core/data/products_data.dart';
 import 'package:foodey/core/models/product.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:foodey/core/data/cart_provider.dart';
+import 'package:foodey/core/utils/dialogs.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -362,9 +363,16 @@ class _HomeScreenState extends State<HomeScreen> {
                     Consumer(
                       builder: (context, ref, _) {
                         return InkWell(
-                          onTap: () => ref
-                              .read(cartProvider.notifier)
-                              .add(product, quantity: 1),
+                          onTap: () {
+                            ref
+                                .read(cartProvider.notifier)
+                                .add(product, quantity: 1);
+                            showAddToCartSuccess(
+                              context,
+                              product: product,
+                              quantity: 1,
+                            );
+                          },
                           child: Container(
                             width: 32,
                             height: 32,

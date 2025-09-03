@@ -3,6 +3,7 @@ import 'package:foodey/core/models/product.dart';
 import 'package:foodey/core/theme/app_colors.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:foodey/core/data/cart_provider.dart';
+import 'package:foodey/core/utils/dialogs.dart';
 
 class ProductDetailScreen extends StatefulWidget {
   final Product product;
@@ -236,6 +237,11 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                 ref
                                     .read(cartProvider.notifier)
                                     .add(product, quantity: _quantity);
+                                showAddToCartSuccess(
+                                  context,
+                                  product: product,
+                                  quantity: _quantity,
+                                );
                               },
                               child: const Text('Add to cart'),
                             );

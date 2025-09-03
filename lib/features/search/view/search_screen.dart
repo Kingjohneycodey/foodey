@@ -3,6 +3,9 @@ import 'package:foodey/core/data/products_data.dart';
 import 'package:foodey/core/models/product.dart';
 import 'package:foodey/core/theme/app_colors.dart';
 import 'package:go_router/go_router.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:foodey/core/data/cart_provider.dart';
+import 'package:foodey/core/utils/dialogs.dart';
 
 class SearchScreen extends StatefulWidget {
   final String? initialQuery;
@@ -375,18 +378,32 @@ class _SearchScreenState extends State<SearchScreen> {
             // Add to cart button
             Padding(
               padding: const EdgeInsets.only(right: 16),
-              child: Container(
-                width: 40,
-                height: 40,
-                decoration: BoxDecoration(
-                  color: AppColors.light,
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: const Icon(
-                  Icons.add,
-                  color: AppColors.primary,
-                  size: 24,
-                ),
+              child: Consumer(
+                builder: (context, ref, _) {
+                  return InkWell(
+                    onTap: () {
+                      ref.read(cartProvider.notifier).add(product, quantity: 1);
+                      showAddToCartSuccess(
+                        context,
+                        product: product,
+                        quantity: 1,
+                      );
+                    },
+                    child: Container(
+                      width: 40,
+                      height: 40,
+                      decoration: BoxDecoration(
+                        color: AppColors.light,
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: const Icon(
+                        Icons.add,
+                        color: AppColors.primary,
+                        size: 24,
+                      ),
+                    ),
+                  );
+                },
               ),
             ),
           ],

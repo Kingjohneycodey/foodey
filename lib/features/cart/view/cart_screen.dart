@@ -189,7 +189,7 @@ class _CartScreenState extends State<CartScreen> {
                           '\$ ' + cart.subtotal.toStringAsFixed(2),
                           style: const TextStyle(
                             fontSize: 28,
-                            fontWeight: FontWeight.w800,
+                            fontWeight: FontWeight.w600,
                           ),
                         ),
                         const Spacer(),
