@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:foodey/core/data/cart_provider.dart';
 import 'package:foodey/core/theme/app_colors.dart';
+import 'package:go_router/go_router.dart';
 
 class CartScreen extends StatefulWidget {
   const CartScreen({super.key});
@@ -26,8 +27,14 @@ class _CartScreenState extends State<CartScreen> {
                   // Custom app bar
                   Container(
                     padding: const EdgeInsets.all(16),
-                    child: const Row(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
+                        Transform.rotate(
+                          angle: -0.3,
+                          child: Icon(Icons.shopping_cart),
+                        ),
+                        SizedBox(width: 8),
                         Text(
                           'Cart',
                           style: TextStyle(
@@ -56,95 +63,114 @@ class _CartScreenState extends State<CartScreen> {
                           child: Row(
                             children: [
                               // Thumbnail placeholder (use product.image if desired)
-                              Container(
-                                width: 88,
-                                height: 72,
-                                decoration: BoxDecoration(
-                                  borderRadius: const BorderRadius.only(
-                                    topLeft: Radius.circular(16),
-                                    bottomLeft: Radius.circular(16),
-                                  ),
-                                  image: DecorationImage(
-                                    image: AssetImage(item.product.image),
-                                    fit: BoxFit.cover,
+                              GestureDetector(
+                                onTap: () => context.push(
+                                  '/product/${item.product.id}',
+                                  extra: item.product,
+                                ),
+                                child: Container(
+                                  width: 90,
+                                  height: 90,
+                                  decoration: BoxDecoration(
+                                    borderRadius: const BorderRadius.only(
+                                      topLeft: Radius.circular(16),
+                                      bottomLeft: Radius.circular(16),
+                                    ),
+                                    image: DecorationImage(
+                                      image: AssetImage(item.product.image),
+                                      fit: BoxFit.cover,
+                                    ),
                                   ),
                                 ),
                               ),
+                              const SizedBox(width: 8),
                               Expanded(
                                 child: Padding(
-                                  padding: const EdgeInsets.all(12),
+                                  padding: const EdgeInsets.all(6),
                                   child: Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      Text(
-                                        item.product.name,
-                                        style: const TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w700,
+                                      GestureDetector(
+                                        onTap: () => context.push(
+                                          '/product/${item.product.id}',
+                                          extra: item.product,
                                         ),
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
+                                        child: Text(
+                                          item.product.name,
+                                          style: const TextStyle(fontSize: 16),
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
                                       ),
-                                      const SizedBox(height: 6),
-                                      Text(
-                                        '\$' +
-                                            item.product.price.toStringAsFixed(
-                                              2,
+                                      const SizedBox(height: 8),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text(
+                                            '\$' +
+                                                item.product.price
+                                                    .toStringAsFixed(2),
+                                            style: const TextStyle(
+                                              fontSize: 16,
+
+                                              fontWeight: FontWeight.w700,
                                             ),
-                                        style: const TextStyle(fontSize: 14),
+                                          ),
+                                          Row(
+                                            children: [
+                                              _QtyButton(
+                                                icon: Icons.remove,
+                                                onTap: () {
+                                                  final current =
+                                                      item.quantity - 1;
+                                                  ref
+                                                      .read(
+                                                        cartProvider.notifier,
+                                                      )
+                                                      .setQuantity(
+                                                        item.product.id,
+                                                        current,
+                                                      );
+                                                },
+                                              ),
+                                              const SizedBox(width: 8),
+                                              Text(
+                                                item.quantity.toString(),
+                                                style: const TextStyle(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w600,
+                                                ),
+                                              ),
+                                              const SizedBox(width: 8),
+                                              _QtyButton(
+                                                icon: Icons.add,
+                                                onTap: () {
+                                                  ref
+                                                      .read(
+                                                        cartProvider.notifier,
+                                                      )
+                                                      .setQuantity(
+                                                        item.product.id,
+                                                        item.quantity + 1,
+                                                      );
+                                                },
+                                              ),
+                                              IconButton(
+                                                icon: const Icon(
+                                                  Icons.delete_outline,
+                                                ),
+                                                onPressed: () => ref
+                                                    .read(cartProvider.notifier)
+                                                    .remove(item.product.id),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
                                       ),
                                     ],
                                   ),
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(right: 12),
-                                child: Row(
-                                  children: [
-                                    // Decrease
-                                    _QtyButton(
-                                      icon: Icons.remove,
-                                      onTap: () {
-                                        final current = item.quantity - 1;
-                                        ref
-                                            .read(cartProvider.notifier)
-                                            .setQuantity(
-                                              item.product.id,
-                                              current,
-                                            );
-                                      },
-                                    ),
-                                    const SizedBox(width: 8),
-                                    Text(
-                                      item.quantity.toString(),
-                                      style: const TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                    ),
-                                    const SizedBox(width: 8),
-                                    // Increase
-                                    _QtyButton(
-                                      icon: Icons.add,
-                                      onTap: () {
-                                        ref
-                                            .read(cartProvider.notifier)
-                                            .setQuantity(
-                                              item.product.id,
-                                              item.quantity + 1,
-                                            );
-                                      },
-                                    ),
-                                    const SizedBox(width: 8),
-                                    // Delete
-                                    IconButton(
-                                      icon: const Icon(Icons.delete_outline),
-                                      onPressed: () => ref
-                                          .read(cartProvider.notifier)
-                                          .remove(item.product.id),
-                                    ),
-                                  ],
                                 ),
                               ),
                             ],
@@ -210,8 +236,8 @@ class _QtyButton extends StatelessWidget {
     return InkWell(
       onTap: onTap,
       child: Container(
-        width: 36,
-        height: 36,
+        width: 28,
+        height: 28,
         decoration: BoxDecoration(
           color: AppColors.light,
           borderRadius: BorderRadius.circular(18),
