@@ -76,7 +76,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                       horizontal: 16,
                       vertical: 8,
                     ),
-                    height: MediaQuery.of(context).size.width * 0.9,
+                    height: MediaQuery.of(context).size.width * 0.7,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(24),
                     ),
