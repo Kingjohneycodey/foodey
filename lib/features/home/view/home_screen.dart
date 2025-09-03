@@ -3,6 +3,8 @@ import 'package:foodey/core/theme/app_colors.dart';
 import 'package:go_router/go_router.dart';
 import 'package:foodey/core/data/products_data.dart';
 import 'package:foodey/core/models/product.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:foodey/core/data/cart_provider.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -357,18 +359,27 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     // Add to cart button
                     const SizedBox(width: 10),
-                    Container(
-                      width: 32,
-                      height: 32,
-                      decoration: BoxDecoration(
-                        color: AppColors.light,
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                      child: const Icon(
-                        Icons.add,
-                        color: AppColors.primary,
-                        size: 20,
-                      ),
+                    Consumer(
+                      builder: (context, ref, _) {
+                        return InkWell(
+                          onTap: () => ref
+                              .read(cartProvider.notifier)
+                              .add(product, quantity: 1),
+                          child: Container(
+                            width: 32,
+                            height: 32,
+                            decoration: BoxDecoration(
+                              color: AppColors.light,
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                            child: const Icon(
+                              Icons.add,
+                              color: AppColors.primary,
+                              size: 20,
+                            ),
+                          ),
+                        );
+                      },
                     ),
                   ],
                 ),

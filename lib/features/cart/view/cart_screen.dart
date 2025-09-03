@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:foodey/core/data/cart_provider.dart';
+import 'package:foodey/core/theme/app_colors.dart';
 
 class CartScreen extends StatefulWidget {
   const CartScreen({super.key});
@@ -10,26 +13,210 @@ class CartScreen extends StatefulWidget {
 class _CartScreenState extends State<CartScreen> {
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 56.0),
-      child: Column(
-        children: [
-          // Custom app bar
-          Container(
-            padding: const EdgeInsets.all(16),
-            child: const Row(
-              children: [
-                Text(
-                  'Cart',
-                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                ),
-              ],
-            ),
-          ),
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.only(bottom: 8.0),
+          child: Consumer(
+            builder: (context, ref, _) {
+              final cart = ref.watch(cartProvider);
+              return Column(
+                children: [
+                  // Custom app bar
+                  Container(
+                    padding: const EdgeInsets.all(16),
+                    child: const Row(
+                      children: [
+                        Text(
+                          'Cart',
+                          style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
 
-          // Main content
-          const Expanded(child: Center(child: Text('Cart Screen Content'))),
-        ],
+                  // Items
+                  Expanded(
+                    child: ListView.separated(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      itemCount: cart.items.length,
+                      separatorBuilder: (_, __) => const SizedBox(height: 12),
+                      itemBuilder: (context, index) {
+                        final item = cart.items[index];
+                        return Container(
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(16),
+                            border: Border.all(color: Colors.grey.shade200),
+                          ),
+                          child: Row(
+                            children: [
+                              // Thumbnail placeholder (use product.image if desired)
+                              Container(
+                                width: 88,
+                                height: 72,
+                                decoration: BoxDecoration(
+                                  borderRadius: const BorderRadius.only(
+                                    topLeft: Radius.circular(16),
+                                    bottomLeft: Radius.circular(16),
+                                  ),
+                                  image: DecorationImage(
+                                    image: AssetImage(item.product.image),
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                              ),
+                              Expanded(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(12),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        item.product.name,
+                                        style: const TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w700,
+                                        ),
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                      const SizedBox(height: 6),
+                                      Text(
+                                        '\$' +
+                                            item.product.price.toStringAsFixed(
+                                              2,
+                                            ),
+                                        style: const TextStyle(fontSize: 14),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(right: 12),
+                                child: Row(
+                                  children: [
+                                    // Decrease
+                                    _QtyButton(
+                                      icon: Icons.remove,
+                                      onTap: () {
+                                        final current = item.quantity - 1;
+                                        ref
+                                            .read(cartProvider.notifier)
+                                            .setQuantity(
+                                              item.product.id,
+                                              current,
+                                            );
+                                      },
+                                    ),
+                                    const SizedBox(width: 8),
+                                    Text(
+                                      item.quantity.toString(),
+                                      style: const TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                    const SizedBox(width: 8),
+                                    // Increase
+                                    _QtyButton(
+                                      icon: Icons.add,
+                                      onTap: () {
+                                        ref
+                                            .read(cartProvider.notifier)
+                                            .setQuantity(
+                                              item.product.id,
+                                              item.quantity + 1,
+                                            );
+                                      },
+                                    ),
+                                    const SizedBox(width: 8),
+                                    // Delete
+                                    IconButton(
+                                      icon: const Icon(Icons.delete_outline),
+                                      onPressed: () => ref
+                                          .read(cartProvider.notifier)
+                                          .remove(item.product.id),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+
+                  // Footer total and proceed
+                  Container(
+                    padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
+                    child: Row(
+                      children: [
+                        Text(
+                          '\$ ' + cart.subtotal.toStringAsFixed(2),
+                          style: const TextStyle(
+                            fontSize: 28,
+                            fontWeight: FontWeight.w800,
+                          ),
+                        ),
+                        const Spacer(),
+                        ElevatedButton(
+                          onPressed: cart.items.isEmpty ? null : () {},
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: cart.items.isEmpty
+                                ? Colors.grey.shade300
+                                : AppColors.primary,
+                            foregroundColor: cart.items.isEmpty
+                                ? Colors.grey.shade700
+                                : Colors.white,
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 24,
+                              vertical: 16,
+                            ),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                          ),
+                          child: const Text('Proceed to pay'),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              );
+            },
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _QtyButton extends StatelessWidget {
+  final IconData icon;
+  final VoidCallback onTap;
+
+  const _QtyButton({required this.icon, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onTap,
+      child: Container(
+        width: 36,
+        height: 36,
+        decoration: BoxDecoration(
+          color: AppColors.light,
+          borderRadius: BorderRadius.circular(18),
+        ),
+        child: Icon(icon, color: AppColors.primary),
       ),
     );
   }
