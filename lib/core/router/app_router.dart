@@ -91,7 +91,6 @@ final GoRouter appRouter = GoRouter(
       ],
     ),
 
-    // Place order route (outside shell to hide bottom nav)
     GoRoute(
       path: '/place-order',
       builder: (context, state) => const PlaceOrderScreen(),
