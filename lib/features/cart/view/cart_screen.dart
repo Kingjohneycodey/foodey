@@ -214,7 +214,7 @@ class _CartScreenState extends State<CartScreen> {
                               borderRadius: BorderRadius.circular(16),
                             ),
                           ),
-                          child: const Text('Proceed to pay'),
+                          child: const Text('Place order'),
                         ),
                       ],
                     ),
