@@ -194,11 +194,7 @@ class _CartScreenState extends State<CartScreen> {
                         ),
                         const Spacer(),
                         ElevatedButton(
-                          onPressed: cart.items.isEmpty
-                              ? null
-                              : () {
-                                  context.push('/place-order');
-                                },
+                          onPressed: cart.items.isEmpty ? null : () {},
                           style: ElevatedButton.styleFrom(
                             backgroundColor: cart.items.isEmpty
                                 ? Colors.grey.shade300

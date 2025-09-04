@@ -16,6 +16,7 @@ import '../../features/profile/view/profile_screen.dart';
 import '../../features/search/view/search_screen.dart';
 import '../../core/models/product.dart';
 import '../../features/menu/view/product_detail_screen.dart';
+import '../../features/checkout/view/place_order_screen.dart';
 
 final GoRouter appRouter = GoRouter(
   initialLocation: '/splash',
@@ -88,6 +89,12 @@ final GoRouter appRouter = GoRouter(
           },
         ),
       ],
+    ),
+
+    // Place order route (outside shell to hide bottom nav)
+    GoRoute(
+      path: '/place-order',
+      builder: (context, state) => const PlaceOrderScreen(),
     ),
   ],
 );
