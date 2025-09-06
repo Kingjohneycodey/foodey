@@ -84,8 +84,12 @@ class _HomeScreenState extends State<HomeScreen> {
                             onTap: () {
                               context.push('/favorites');
                             },
-                            child: const Icon(Icons.favorite),
+                            child: const Icon(
+                              Icons.favorite,
+                              color: AppColors.primary,
+                            ),
                           ),
+                          SizedBox(width: 8),
                           GestureDetector(
                             onTap: () {
                               // Handle notifications
