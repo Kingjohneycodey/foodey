@@ -70,7 +70,7 @@ class FavoritesScreen extends ConsumerWidget {
           ),
           const SizedBox(height: 8),
           Text(
-            'Add some items to your favourites!',
+            'Add some food to your favourites!',
             style: TextStyle(fontSize: 14, color: Colors.grey.shade500),
           ),
         ],
