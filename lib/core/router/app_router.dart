@@ -17,6 +17,7 @@ import '../../features/search/view/search_screen.dart';
 import '../../core/models/product.dart';
 import '../../features/menu/view/product_detail_screen.dart';
 import '../../features/checkout/view/place_order_screen.dart';
+import '../../features/favorites/view/favorites_screen.dart';
 
 final GoRouter appRouter = GoRouter(
   initialLocation: '/splash',
@@ -74,6 +75,11 @@ final GoRouter appRouter = GoRouter(
           path: '/search',
           pageBuilder: (context, state) =>
               NoTransitionPage(child: const SearchScreen()),
+        ),
+        GoRoute(
+          path: '/favorites',
+          pageBuilder: (context, state) =>
+              NoTransitionPage(child: const FavoritesScreen()),
         ),
         GoRoute(
           path: '/product/:id',

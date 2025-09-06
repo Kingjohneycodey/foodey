@@ -3,6 +3,7 @@ class Product {
   final String name;
   final String description;
   final double price;
+  final double? originalPrice;
   final double rating;
   final String image;
   final String category;
@@ -14,6 +15,7 @@ class Product {
     required this.name,
     required this.description,
     required this.price,
+    this.originalPrice,
     required this.rating,
     required this.image,
     required this.category,
@@ -29,6 +31,11 @@ class Product {
       price: (json['price'] is String)
           ? double.tryParse(json['price'].replaceAll('\$', '')) ?? 0.0
           : (json['price'] ?? 0.0).toDouble(),
+      originalPrice: json['originalPrice'] != null
+          ? (json['originalPrice'] is String)
+                ? double.tryParse(json['originalPrice'].replaceAll('\$', ''))
+                : (json['originalPrice']).toDouble()
+          : null,
       rating: (json['rating'] is String)
           ? double.tryParse(json['rating']) ?? 0.0
           : (json['rating'] ?? 0.0).toDouble(),
@@ -45,6 +52,7 @@ class Product {
       'name': name,
       'description': description,
       'price': price,
+      'originalPrice': originalPrice,
       'rating': rating,
       'image': image,
       'category': category,

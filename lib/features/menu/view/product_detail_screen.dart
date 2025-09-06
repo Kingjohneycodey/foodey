@@ -3,18 +3,20 @@ import 'package:foodey/core/models/product.dart';
 import 'package:foodey/core/theme/app_colors.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:foodey/core/data/cart_provider.dart';
+import 'package:foodey/core/data/favorites_provider.dart';
 import 'package:foodey/core/utils/dialogs.dart';
 
-class ProductDetailScreen extends StatefulWidget {
+class ProductDetailScreen extends ConsumerStatefulWidget {
   final Product product;
 
   const ProductDetailScreen({super.key, required this.product});
 
   @override
-  State<ProductDetailScreen> createState() => _ProductDetailScreenState();
+  ConsumerState<ProductDetailScreen> createState() =>
+      _ProductDetailScreenState();
 }
 
-class _ProductDetailScreenState extends State<ProductDetailScreen> {
+class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen> {
   final PageController _pageController = PageController();
   int _currentPage = 0;
   int _quantity = 1;
@@ -65,9 +67,26 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                           icon: const Icon(Icons.share_outlined),
                           onPressed: () {},
                         ),
-                        IconButton(
-                          icon: const Icon(Icons.favorite_border),
-                          onPressed: () {},
+                        Builder(
+                          builder: (context) {
+                            final favorites = ref.watch(favoritesProvider);
+                            final isFavorite = favorites.items.any(
+                              (item) => item.id == product.id,
+                            );
+                            return IconButton(
+                              icon: Icon(
+                                isFavorite
+                                    ? Icons.favorite
+                                    : Icons.favorite_border,
+                                color: isFavorite ? Colors.red : null,
+                              ),
+                              onPressed: () {
+                                ref
+                                    .read(favoritesProvider.notifier)
+                                    .toggle(product);
+                              },
+                            );
+                          },
                         ),
                       ],
                     ),
@@ -219,33 +238,29 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                           ),
                         ),
                         const Spacer(),
-                        Consumer(
-                          builder: (context, ref, _) {
-                            return ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: AppColors.primary,
-                                foregroundColor: Colors.white,
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 24,
-                                  vertical: 16,
-                                ),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(16),
-                                ),
-                              ),
-                              onPressed: () {
-                                ref
-                                    .read(cartProvider.notifier)
-                                    .add(product, quantity: _quantity);
-                                showAddToCartSuccess(
-                                  context,
-                                  product: product,
-                                  quantity: _quantity,
-                                );
-                              },
-                              child: const Text('Add to cart'),
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors.primary,
+                            foregroundColor: Colors.white,
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 24,
+                              vertical: 16,
+                            ),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                          ),
+                          onPressed: () {
+                            ref
+                                .read(cartProvider.notifier)
+                                .add(product, quantity: _quantity);
+                            showAddToCartSuccess(
+                              context,
+                              product: product,
+                              quantity: _quantity,
                             );
                           },
+                          child: const Text('Add to cart'),
                         ),
                       ],
                     ),

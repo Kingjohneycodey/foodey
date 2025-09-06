@@ -5,6 +5,7 @@ import 'package:foodey/core/data/products_data.dart';
 import 'package:foodey/core/models/product.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:foodey/core/data/cart_provider.dart';
+import 'package:foodey/core/data/favorites_provider.dart';
 import 'package:foodey/core/utils/dialogs.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -74,12 +75,24 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         ],
                       ),
+
                       const Spacer(),
-                      IconButton(
-                        icon: const Icon(Icons.notifications),
-                        onPressed: () {
-                          // Handle notifications
-                        },
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              context.push('/favorites');
+                            },
+                            child: const Icon(Icons.favorite),
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              // Handle notifications
+                            },
+                            child: const Icon(Icons.notifications),
+                          ),
+                        ],
                       ),
                     ],
                   ),
@@ -321,6 +334,43 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         ],
                       ),
+                    ),
+                  ),
+                  // Favorite button
+                  Positioned(
+                    top: 8,
+                    right: 8,
+                    child: Consumer(
+                      builder: (context, ref, _) {
+                        final favorites = ref.watch(favoritesProvider);
+                        final isFavorite = favorites.items.any(
+                          (item) => item.id == product.id,
+                        );
+                        return GestureDetector(
+                          onTap: () {
+                            ref
+                                .read(favoritesProvider.notifier)
+                                .toggle(product);
+                          },
+                          child: Container(
+                            width: 32,
+                            height: 32,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                            child: Icon(
+                              isFavorite
+                                  ? Icons.favorite
+                                  : Icons.favorite_border,
+                              color: isFavorite
+                                  ? Colors.red
+                                  : Colors.grey.shade600,
+                              size: 18,
+                            ),
+                          ),
+                        );
+                      },
                     ),
                   ),
                 ],
