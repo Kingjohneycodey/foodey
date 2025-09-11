@@ -109,9 +109,7 @@ class _CartScreenState extends State<CartScreen> {
                                             MainAxisAlignment.spaceBetween,
                                         children: [
                                           Text(
-                                            '\$' +
-                                                item.product.price
-                                                    .toStringAsFixed(2),
+                                            '\$ ${item.product.price.toStringAsFixed(2)}',
                                             style: const TextStyle(
                                               fontSize: 16,
 
@@ -186,7 +184,7 @@ class _CartScreenState extends State<CartScreen> {
                     child: Row(
                       children: [
                         Text(
-                          '\$ ' + cart.subtotal.toStringAsFixed(2),
+                          '\$ ${cart.subtotal.toStringAsFixed(2)}',
                           style: const TextStyle(
                             fontSize: 28,
                             fontWeight: FontWeight.w600,

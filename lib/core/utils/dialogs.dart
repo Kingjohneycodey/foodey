@@ -10,8 +10,7 @@ Future<void> showAddToCartSuccess(
   required int quantity,
 }) async {
   await Flushbar(
-    message:
-        'Added ' + quantity.toString() + ' × ' + product.name + ' to your cart',
+    message: 'Added $quantity × ${product.name} to your cart',
     icon: const Icon(Icons.check_circle, color: Colors.white),
     backgroundColor: AppColors.primary,
     duration: const Duration(seconds: 2),

@@ -90,8 +90,8 @@ class _RegisterOtpScreenState extends State<RegisterOtpScreen> {
     }
   }
 
-  void _onKey(int index, RawKeyEvent event) {
-    if (event is RawKeyDownEvent &&
+  void _onKey(int index, KeyEvent event) {
+    if (event is KeyDownEvent &&
         event.logicalKey == LogicalKeyboardKey.backspace &&
         _controllers[index].text.isEmpty &&
         index > 0) {
@@ -147,12 +147,11 @@ class _RegisterOtpScreenState extends State<RegisterOtpScreen> {
                     children: [
                       Text(
                         email != null
-                            ? "Enter the verification code sent to your email " +
-                                  email
+                            ? "Enter the verification code sent to your email $email"
                             : 'no-email@missing',
                         style: const TextStyle(
                           fontSize: 16,
-                          color: Color(0xFF60655C),
+                          color: Color.fromARGB(255, 6, 8, 4),
                         ),
                       ),
                       const SizedBox(height: 24),
@@ -168,9 +167,9 @@ class _RegisterOtpScreenState extends State<RegisterOtpScreen> {
                   return SizedBox(
                     width: 70,
                     height: 70,
-                    child: RawKeyboardListener(
+                    child: KeyboardListener(
                       focusNode: FocusNode(),
-                      onKey: (e) => _onKey(i, e),
+                      onKeyEvent: (e) => _onKey(i, e),
                       child: TextField(
                         controller: _controllers[i],
                         focusNode: _focusNodes[i],
@@ -252,7 +251,9 @@ class _RegisterOtpScreenState extends State<RegisterOtpScreen> {
                   GestureDetector(
                     onTap: _secondsLeft == 0
                         ? () {
-                            for (final c in _controllers) c.clear();
+                            for (final c in _controllers) {
+                              c.clear();
+                            }
                             _focusNodes.first.requestFocus();
                             _startTimer();
                           }
@@ -310,7 +311,7 @@ class _RegisterOtpScreenState extends State<RegisterOtpScreen> {
   }
 
   void _onVerifyPressed() {
-    _showAlert(title: 'Verification', message: 'Code entered: ' + _otp);
+    _showAlert(title: 'Verification', message: 'Code entered: $_otp');
   }
 
   void _showAlert({required String title, required String message}) {

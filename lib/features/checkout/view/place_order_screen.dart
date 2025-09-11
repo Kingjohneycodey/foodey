@@ -327,7 +327,7 @@ class _PlaceOrderScreenState extends ConsumerState<PlaceOrderScreen> {
         Text(
           isDelivery
               ? '+\$${amount.toStringAsFixed(2)}'
-              : '${amount.toStringAsFixed(2)}',
+              : '\$${amount.toStringAsFixed(2)}',
           style: TextStyle(
             fontSize: isTotal ? 18 : 16,
             fontWeight: isTotal ? FontWeight.bold : FontWeight.w600,
