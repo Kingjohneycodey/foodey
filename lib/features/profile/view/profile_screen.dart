@@ -42,16 +42,14 @@ class ProfileScreen extends ConsumerWidget {
                 children: [
                   // Profile Avatar
                   Container(
-                    width: 60,
-                    height: 60,
+                    width: 80,
+                    height: 80,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: Colors.grey[300],
-                    ),
-                    child: const Icon(
-                      Icons.person,
-                      size: 30,
-                      color: Colors.grey,
+                      image: const DecorationImage(
+                        image: AssetImage('assets/images/avatar1.png'),
+                        fit: BoxFit.cover,
+                      ),
                     ),
                   ),
 
