@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:foodey/core/theme/app_colors.dart';
+import 'package:foodey/core/theme/theme_provider.dart';
 import 'package:foodey/features/auth/view/register_otp_screen.dart';
 import 'package:foodey/features/onboarding/view/onboarding_screen2.dart';
 import 'package:go_router/go_router.dart';
@@ -104,23 +106,25 @@ final GoRouter appRouter = GoRouter(
   ],
 );
 
-class MainAppShell extends StatelessWidget {
+class MainAppShell extends ConsumerWidget {
   final Widget child;
 
   const MainAppShell({super.key, required this.child});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final location = GoRouterState.of(context).uri.toString();
     final currentIndex = _getIndex(location);
+    final themeMode = ref.watch(themeModeProvider);
+    final isDarkMode = themeMode == ThemeMode.dark;
 
     return Scaffold(
       body: child,
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
-        backgroundColor: Colors.white,
+        backgroundColor: isDarkMode ? const Color(0xFF1A1A1A) : Colors.white,
         selectedItemColor: AppColors.primary,
-        unselectedItemColor: Colors.grey,
+        unselectedItemColor: isDarkMode ? Colors.grey[400] : Colors.grey,
         currentIndex: currentIndex,
         onTap: (index) {
           switch (index) {
