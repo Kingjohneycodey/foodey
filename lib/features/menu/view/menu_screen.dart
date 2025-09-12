@@ -58,7 +58,6 @@ class _MenuScreenState extends ConsumerState<MenuScreen> {
       ),
       body: Column(
         children: [
-          // Search bar
           Container(
             margin: const EdgeInsets.all(16),
             decoration: BoxDecoration(
