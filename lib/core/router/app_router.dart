@@ -12,11 +12,13 @@ import '../../features/auth/view/login_screen.dart';
 import '../../features/auth/view/register_screen.dart';
 import '../../features/home/view/home_screen.dart';
 import '../../features/menu/view/menu_screen.dart';
+import '../../features/menu/view/restaurant_detail_screen.dart';
 import '../../features/cart/view/cart_screen.dart';
 import '../../features/orders/view/orders_screen.dart';
 import '../../features/profile/view/profile_screen.dart';
 import '../../features/search/view/search_screen.dart';
 import '../../core/models/product.dart';
+import '../../core/models/restaurant.dart';
 import '../../features/menu/view/product_detail_screen.dart';
 import '../../features/checkout/view/place_order_screen.dart';
 import '../../features/favorites/view/favorites_screen.dart';
@@ -93,6 +95,19 @@ final GoRouter appRouter = GoRouter(
             // Fallback: if no product provided, show an empty scaffold
             return const Scaffold(
               body: Center(child: Text('Product not found')),
+            );
+          },
+        ),
+        GoRoute(
+          path: '/restaurant/:id',
+          builder: (context, state) {
+            final extra = state.extra;
+            if (extra is Restaurant) {
+              return RestaurantDetailScreen(restaurant: extra);
+            }
+            // Fallback: if no restaurant provided, show an empty scaffold
+            return const Scaffold(
+              body: Center(child: Text('Restaurant not found')),
             );
           },
         ),
