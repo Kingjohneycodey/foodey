@@ -81,7 +81,6 @@ class _MenuScreenState extends ConsumerState<MenuScreen> {
             ),
           ),
 
-          // Category filter chips
           Container(
             height: 50,
             padding: const EdgeInsets.symmetric(horizontal: 16),
